@@ -6,14 +6,17 @@ services:
       dockerfile: Dockerfile
     volumes:
       - .:/app
+      - ./gcp-creds.json:/secrets/gcp-creds.json:ro
     ports:
       - "8000:8000"
+    environment:
+      GOOGLE_APPLICATION_CREDENTIALS: /secrets/gcp-creds.json
     networks:
       - custom_network
     depends_on:
       database:
         condition: service_started
-      
+
   minio:
     container_name: minio
     image: minio/minio
@@ -53,14 +56,13 @@ services:
     container_name: db
     restart: always
     env_file:
-      - .env.dev
+      - .env
     expose:
       - "5432:5432"
     volumes:
       - pg_data:/var/lib/postgresql/data
     networks:
       - custom_network
-
 
 volumes:
   storage: {}
@@ -74,10 +76,4 @@ networks:
 configs:
   qdrant_config:
     content: |
-      log_level: INFO      
-          
-
-
-    
-
-    
+      log_level: INFO

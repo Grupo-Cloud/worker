@@ -1,20 +1,13 @@
 from functools import lru_cache
-from typing import Annotated
 
-from jwt import InvalidTokenError
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from langchain_qdrant import QdrantVectorStore
 from minio import Minio
 from pydantic import SecretStr
 from qdrant_client import QdrantClient
-from sqlalchemy.orm import Session
 
 from app.core.config import get_core_settings, get_qdrant_settings, get_s3_settings
 from app.core.logger import get_logger
-from app.db.database import get_db
-from app.exceptions.user import UserNotFoundException
-from app.models.user import User
-from app.services.auth import service as auth_service
 
 logger = get_logger(__name__)
 
