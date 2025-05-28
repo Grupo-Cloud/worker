@@ -1,14 +1,28 @@
+import importlib
 import json
+import pkgutil
 from uuid import UUID
 
 from google.cloud import pubsub_v1
 from google.cloud.pubsub_v1.subscriber.message import Message
 from pydantic import BaseModel
 
+import app.models
+import app.models.associations
 from app.api.document import delete_document
 from app.core.config import get_pubsub_settings, get_s3_settings
-from app.db.database import get_db
+from app.db.database import Base, engine, get_db
 from app.dependencies import get_qdrant_vector_store, get_s3_client
+
+for module_info in pkgutil.iter_modules(app.models.__path__, app.models.__name__ + "."):
+    _ = importlib.import_module(module_info.name)
+
+for module_info in pkgutil.iter_modules(
+    app.models.associations.__path__, app.models.associations.__name__ + "."
+):
+    _ = importlib.import_module(module_info.name)
+
+Base.metadata.create_all(bind=engine)
 
 pubsub_settings = get_pubsub_settings()
 

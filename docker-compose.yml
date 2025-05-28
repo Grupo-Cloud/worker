@@ -13,9 +13,6 @@ services:
       GOOGLE_APPLICATION_CREDENTIALS: /secrets/gcp-creds.json
     networks:
       - custom_network
-    depends_on:
-      database:
-        condition: service_started
 
 networks:
   custom_network:
