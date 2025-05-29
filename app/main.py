@@ -40,6 +40,7 @@ def callback(message: Message) -> None:
     db_gen = get_db()
     try:
         payload = json.loads(message.data.decode("utf-8"))
+        print(payload)
         parsed = DeleteDocumentMessage(**payload)
 
         delete_document(
@@ -49,15 +50,14 @@ def callback(message: Message) -> None:
             get_s3_settings(),
             get_qdrant_vector_store(),
         )
-        message.ack()
     except Exception as e:
         print(f"Error while deleting document: {e}")
-        message.nack()
     finally:
         try:
             next(db_gen)
         except StopIteration:
             pass
+        message.ack()
 
 
 def listen_to_pubsub():

@@ -7,8 +7,6 @@ services:
     volumes:
       - .:/app
       - ./gcp-creds.json:/secrets/gcp-creds.json:ro
-    ports:
-      - "8000:8000"
     environment:
       GOOGLE_APPLICATION_CREDENTIALS: /secrets/gcp-creds.json
     networks:
